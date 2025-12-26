@@ -29,10 +29,16 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
+        String email = input.getEmail();
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         User user = new User();
-                user.setFullName(input.getFullName());
-                user.setEmail(input.getEmail());
-                user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setFullName(input.getFullName());
+        user.setEmail(input.getEmail());
+        user.setPassword(passwordEncoder.encode(input.getPassword()));
 
         return userRepository.save(user);
     }
